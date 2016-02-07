@@ -1,0 +1,85 @@
+---
+title: "AirbnbReport"
+author: "Shiksha Mann"
+date: "6 February 2016"
+output: html_document
+---
+
+Airbnb Booking Analysis
+==========================================
+
+**BDA** - *INSEAD MBA 16J*
+
+
+ 
+## Business motivation
+
+
+
+<br>
+
+
+## Data Description
+ 
+First, let's look at the data
+
+```{r, echo=FALSE, message=FALSE, prompt=FALSE, results='asis'}
+local_directory=getwd()
+source(paste(local_directory,"/R/library.R",sep="/"))
+airbnbdata= within(read.csv(paste(local_directory,"/data/Airbnb_data1.csv",sep="/")),rm("X"))
+library(googleVis)
+t1 <- gvisTable(airbnbdata[,],options = list(showRowNumber = FALSE, width = 800, height = min(400,27*(nrow(airbnbdata) + 1)), allowHTML = TRUE, page = 'disable'))
+print(t1,'chart')
+```
+
+It is very important to understand the columns, let's review its content:
+
+* **id_visitor**: the id of the visitor
+* **id_session**: the id of the session
+* **dim_session_number**: the number of session on a given day for a visitor
+* **dim_user_agent**: the user agent of the session
+* **dim_device_app_combo**: the parsed out device/app combo from user agent
+* **ds**: date stamp of session
+* **ts_min**: time of session start
+* **ts_max**: time of session end
+* **did_search**: binary flag indicating if the visitor performed a search during the session
+* **sent_message**: binary flag indicating if the visitor sent a message during the session
+* **sent_booking_request**: binary flag indicating if the visitor sent a booking request during the session
+
+## Introductory analysis
+
+
+##
+Number of visits per booking
+```{r echo=TRUE, eval=TRUE, tidy=TRUE}
+airbnb_visits = nrow(airbnbdata)
+class(airbnbdata)
+airbnb_bookings = sum(as.numeric(airbnbdata[11,]))
+Visit_per_booking = airbnb_visits/airbnb_bookings
+
+```
+
+For Looking at Desktop bookings with Chrome
+
+```{r echo=TRUE, eval=TRUE, tidy=TRUE}
+airbnb_visits_Chrome = airbnbdata[airbnbdata$dim_device_app_combo =="Desktop - Chrome", ]
+airbnb_visits_Chrome = nrow(airbnb_visits_Chrome)-1
+airbnb_bookings_Chrome = sum(airbnb_visits_Chrome[11,])
+Visit_per_booking_Chrome = airbnb_visits_Chrome/airbnb_bookings_Chrome
+```
+
+#airbnb_bookings <-  group_by(airbnb_visits, factor(source)) %>% #summarise(sent_booking_request = sum(sent_booking_request))
+#airbnb_bookings = data.frame(pages = airbnb_bookings$`factor(source)`, sent_booking_request = airbnb_bookings$sent_booking_request)
+airbnb_bookings = airbnb_bookings[sort(airbnb_bookings$sent_booking_request, decreasing =  TRUE, index.return = TRUE)$ix,]
+
+gadata_referral = gadata[gadata$Medium =="referral", ]
+source_referral <-  group_by(gadata_referral, factor(source)) %>% summarise(pageviews = sum(pageviews))
+source_referral = data.frame(pages = source_referral$`factor(source)`, pageviews = source_referral$pageviews)
+source_referral = source_referral[sort(source_referral$pageviews, decreasing =  TRUE, index.return = TRUE)$ix,]
+#```
+
+#```{r echo=FALSE, message=FALSE, prompt=FALSE, results='asis'}
+show_data = data.frame(source_referral)
+m1<-gvisTable(show_data,options=list(showRowNumber=TRUE,width=1220, height=min(400,27*(nrow(show_data)+1)),allowHTML=TRUE,page='disable'))
+print(m1,'chart')
+```
