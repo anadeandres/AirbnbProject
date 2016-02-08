@@ -1,0 +1,27 @@
+---
+title: "Airbnbproject_Ana"
+date: "January 31st 2016"
+output: html_document
+---
+**(Names)** - *INSEAD MBA 16J*
+
+blablabla (some intro about the motivation)
+
+##Data Description: 
+
+In this case, we provide an already downloaded file with the data to analyze. This data is composed of the following fields:
+
+* **id_visitor **: ID of the visitor 
+* **id_session **: ID of the session 
+* **field3 **:
+* **field4 **:
+* **field5 **:
+
+
+
+```{r, echo=FALSE, message=FALSE, prompt=FALSE, results='asis'}
+local_directory <- getwd()
+ProjectData <- read.csv("data/Airbnb_data.csv", sep=";", dec=",") # this contains only the matrix ProjectData
+```
+
+
