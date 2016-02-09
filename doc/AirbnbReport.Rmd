@@ -1,6 +1,6 @@
 ---
 title: "AirbnbReport"
-author: "Shiksha Mann"
+author: BDA Group
 date: "6 February 2016"
 output: html_document
 ---
@@ -14,12 +14,77 @@ Airbnb Booking Analysis
  
 ## Business motivation
 
+Understanding customers' dynamics and behaviour is essential for digital companies, especially for those whose business model is based on purchases or reservations from customers. 
+
+In the case of a company such as Airbnb, where customers rent rooms or apartments from other users, it is key to understand what drives customers to make the final reservation. If the company manages to understand the patterns, and has a systematic process to analyze the behaviour, it will be able to implement actions to improve the booking ratio, as well as to assess the success of the actions. 
+
+For this case, we have selected a public shared file with data from customers, and we will guide you through the different data that the file contains, and the different measures that we find interesting in order to analyze customers' behaviour. 
 
 
 <br>
+##ANA
+
+
+```{r, echo=FALSE, message=FALSE, prompt=FALSE, results='asis'}
+library(googleVis)
+library(dplyr)
+local_directory <- getwd()
+ProjectData <- read.csv("data/Airbnb_data.csv", sep=";", dec=",") # this contains only the matrix ProjectData
+t1 <- gvisTable(ProjectData[,],options = list(showRowNumber = FALSE, width = 800, height = min(400,27*(nrow(ProjectData) + 1)), allowHTML = TRUE, page = 'disable'))
+print(t1,'chart')
+```
+
+# Conversion rates
+
+Let's have a look at the conversion rates for the users. We are going to analyze in this case several ratios, such as:
+- the percentage of visits that end in bookings
+- the percentage of times that users send a message to the owner
+- the perc. of times that a booking is realized after a message has been sent
+
+Before any other analysis, let's look at these ratios for the global set of customers (without considering the number of session or other parameters):
+
+```{r, echo=TRUE, message=FALSE, prompt=FALSE, results='asis'}
+int1 <- ProjectData[ProjectData$sent_booking_request == 1,]
+int2 <- select(int1, totalbookings = sum(sent_booking_request))
+int3 <- summarise(int2, percbookings = sum(totalbookings)*100/nrow(ProjectData))
+print(int3)
+```
 
 
 ## Data Description
+ ##Dominik
+ start lubridate
+
+
+```{r}
+airbnbData = read.csv("Airbnb_data1.csv", header=TRUE, sep=",", dec=".")
+airbnbData[,"ts_min_calc"]=dmy_hm(airbnbData[,which(colnames(airbnbData)=="ts_min")])
+airbnbData[,"ts_max_calc"]=dmy_hm(airbnbData[,which(colnames(airbnbData)=="ts_max")])
+airbnbData[,"ts_diff"]=difftime(airbnbData[,which(colnames(airbnbData)=="ts_max_calc")],airbnbData[,which(colnames(airbnbData)=="ts_min_calc")])
+
+airbnbData[,"ts_min_date"]=as.Date(airbnbData[,which(colnames(airbnbData)=="ts_min_calc")])
+airbnbData[,"ts_max_date"]=as.Date(airbnbData[,which(colnames(airbnbData)=="ts_max_calc")])
+airbnbData[,"sameday_check"]=ifelse(airbnbData$ts_min_date==airbnbData$ts_max_date,0,1)
+
+
+#visitors as rownames
+byVisitor=unique(airbnbData$id_visitor)
+
+
+by
+
+startDate=as.Date(min(airbnbData$ts_min_calc))
+endDate=as.Date(max(airbnbData$ts_max_calc))
+
+byDate=as.data.frame(as.Date(c(startDate:endDate)))
+byDate[,"date"]=as.Date(byDate[,1], origin)
+byDate$`c(startDate:endDate)`=NULL
+
+
+
+```
+
+##Shiksha
  
 First, let's look at the data
 
